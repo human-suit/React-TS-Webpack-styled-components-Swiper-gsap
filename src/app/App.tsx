@@ -1,19 +1,25 @@
 import React, { useState, useRef } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { TimelineCircle } from "../widgets/timeline/ui/TimelineCircle";
+import { TimelinePoints } from "../widgets/timeline/ui/TimelinePoints";
+import { steps } from "../widgets/timeline/data/steps";
 import {
   SimpleSlider,
   SimpleSliderRef,
 } from "../widgets/timeline/ui/TimelineSlider";
-import { steps } from "../widgets/timeline/data/steps";
 
 const GlobalStyle = createGlobalStyle`
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body, #root { width:100%; height:100%; font-family:"PT Sans", sans-serif; }
+  html, body, #root {
+    width:100%;
+    height:100%;
+    font-family:"PT Sans", sans-serif;
+    background: #E5E5E5;
+  }
 `;
 
 const Container = styled.div`
-  padding-top: 15vh;
+  padding-top: 10vh;
   min-height: 100%;
   display: flex;
   flex-direction: column;
@@ -65,30 +71,36 @@ const Liner = styled.div`
 `;
 
 const Section = styled.div`
+  margin-top: -150px;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
   position: relative;
+`;
+
+const CircleWrapper = styled.div<{ size: number }>`
+  position: relative;
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
 `;
 
 const Controls = styled.div`
   display: flex;
-  align-items: center;
   gap: 20px;
-  margin-bottom: 20px;
-  margin-top: 280px;
+  align-items: center;
+  margin: 20px 0px 20px 60px;
 `;
 
 const StepCounter = styled.div`
   font-size: 18px;
   color: #42567a;
   font-weight: bold;
+  margin: 20px 0px -10px 65px;
 `;
 
 const Button = styled.button`
   font-size: 18px;
   color: #42567a;
+  background: #e5e5e5;
   width: 50px;
   height: 50px;
   border: 1px solid #42567a;
@@ -96,7 +108,7 @@ const Button = styled.button`
   cursor: pointer;
 
   &:disabled {
-    background: #ccc;
+    background: #eee;
     cursor: not-allowed;
   }
 `;
@@ -106,19 +118,15 @@ const App = () => {
   const sliderRef = useRef<SimpleSliderRef>(null);
 
   const handlePrev = () => {
-    const newStep = Math.max(currentStep - 1, 0);
+    const newStep = currentStep === 0 ? steps.length - 1 : currentStep - 1;
     setCurrentStep(newStep);
     sliderRef.current?.slideTo(0);
   };
 
   const handleNext = () => {
-    const newStep = Math.min(currentStep + 1, steps.length - 1);
+    const newStep = currentStep === steps.length - 1 ? 0 : currentStep + 1;
     setCurrentStep(newStep);
     sliderRef.current?.slideTo(0);
-  };
-
-  const handleSlideChange = (index: number) => {
-    // Можно синхронизировать, если нужно
   };
 
   return (
@@ -134,37 +142,43 @@ const App = () => {
         </Header>
 
         <Section>
-          <TimelineCircle
-            size={500}
-            color="#3877EE"
-            values={steps[currentStep].years}
-          />
+          <CircleWrapper size={500}>
+            <TimelineCircle
+              size={500}
+              color="#3877EE"
+              values={steps[currentStep].years}
+            />
+
+            <TimelinePoints
+              steps={steps}
+              circleSize={500}
+              activeIndex={currentStep}
+              onPointClick={(index) => {
+                setCurrentStep(index);
+                sliderRef.current?.slideTo(0);
+              }}
+            />
+          </CircleWrapper>
         </Section>
 
+        <StepCounter>
+          {String(currentStep + 1).padStart(2, "0")}/
+          {String(steps.length).padStart(2, "0")}
+        </StepCounter>
+
         <Controls>
-          <Button onClick={handlePrev} disabled={currentStep === 0}>
-            &lt;
-          </Button>
-          <StepCounter>
-            {String(currentStep + 1).padStart(2, "0")}/
-            {String(steps.length).padStart(2, "0")}
-          </StepCounter>
-          <Button
-            onClick={handleNext}
-            disabled={currentStep === steps.length - 1}
-          >
-            &gt;
-          </Button>
+          <Button onClick={handlePrev}>&lt;</Button>
+          <Button onClick={handleNext}>&gt;</Button>
         </Controls>
 
         <SimpleSlider
           ref={sliderRef}
           slides={steps[currentStep].facts.map((f) => ({
-            title: `${f.year} - ${f.title}`,
+            title: `${f.year}`,
             description: f.description,
           }))}
           currentStep={0}
-          onSlideChange={handleSlideChange}
+          onSlideChange={() => {}}
         />
       </Container>
     </>

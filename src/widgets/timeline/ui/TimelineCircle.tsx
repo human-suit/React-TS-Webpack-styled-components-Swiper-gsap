@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 interface TimelineCircleProps {
-  size?: number; // диаметр круга
-  color?: string; // цвет круга
+  size?: number;
+  color?: string;
   values: [number, number];
 }
 
@@ -12,41 +12,37 @@ const Circle = styled.div<{ size: number; color: string }>`
   height: ${({ size }) => size}px;
   border: 1px solid ${({ color }) => color};
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  color: white;
-  transition: transform 0.3s;
-
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
 
-  gap: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+
   font-size: 180px;
+  font-weight: bold;
+  z-index: 1;
 `;
 
-const NumberTextFirst = styled.span`
-  line-height: 1;
-  color: #3877ee; /* первый цвет */
+const First = styled.span`
+  color: #3877ee;
 `;
 
-const NumberTextSecond = styled.span`
-  line-height: 1;
-  color: #ef5da8; /* второй цвет */
+const Second = styled.span`
+  color: #ef5da8;
 `;
 
 export const TimelineCircle: React.FC<TimelineCircleProps> = ({
-  size = 60,
-  color = "#42567A",
+  size = 500,
+  color = "#3877EE",
   values,
 }) => {
   return (
     <Circle size={size} color={color}>
-      <NumberTextFirst>{values[0]}</NumberTextFirst>
-      <NumberTextSecond>{values[1]}</NumberTextSecond>
+      <First>{values[0]}</First>
+      <Second>{values[1]}</Second>
     </Circle>
   );
 };
