@@ -30,8 +30,8 @@ https://github.com/user-attachments/assets/568ccf17-128c-496e-bd69-2205b08cd7e2
 1. Клонируем репозиторий:
 
 ```bash
-git clone [https://github.com/Проект](https://github.com/human-suit/React-TS-Webpack-styled-components-Swiper-gsap)
+git clone https://github.com/human-suit/React-TS-Webpack-styled-components-Swiper-gsap
 cd REPO_NAME
-npm install
+npm i
 npm start
 ```
