@@ -1,4 +1,4 @@
-# Swiper - gsap
+# Swiper - кастомная анимация js css
 
 Описание проекта: фронтенд на React + TypeScript с использованием styled-components и Swiper для слайдеров.
 
